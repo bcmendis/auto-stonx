@@ -6,7 +6,7 @@ type Props = {};
 
 const Navbar = async (props: Props) => {
   return (
-    <header className="z-[100] flex items-center justify-between border-b border-slate-300 dark:border-neutral-900 bg-slate-100 dark:bg-black/40 p-4 backdrop-blur-lg">
+    <header className="h-[70px] z-[100] flex items-center justify-between border-b border-slate-300 dark:border-neutral-900 bg-slate-100 dark:bg-black/40 p-4 backdrop-blur-lg">
       <aside className="flex items-center gap-[2px]">
         <Rocket className="h-8 w-8 fill-slate-100 dark:fill-black stroke-orange-500" />
         <p className="text-xl font-bold">autoStonx</p>

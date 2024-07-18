@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import Navbar from "@/components/global/Navbar";
 import Sidebar from "@/components/global/Sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = DM_Sans({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default function RootLayout({
           <div className="flex h-full">
             <Sidebar />
           {children}
+          <Toaster />
           </div>
           </div>
         </ThemeProvider>
