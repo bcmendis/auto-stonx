@@ -2,18 +2,22 @@
 
 import { EditorCanvasCardType } from "@/lib/types";
 import { useEditor } from "@/providers/editor-provider";
-import { Position, useNodeId } from "@xyflow/react";
+import { Position, useNodeId, useReactFlow } from "@xyflow/react";
 import React, { useEffect, useMemo, useState } from "react";
 import EditorCanvasCardIconHelper from "./EditorCanvasCardIconHelper";
 import CustomHandle from "./CustomHandle";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
+import { Trash2 } from "lucide-react";
+import { Button } from "../ui/button";
 
 type Props = {};
 
 const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
   const { state, dispatch } = useEditor();
+
+  const { deleteElements } = useReactFlow();
 
   const [isConnected, setIsConnected] = useState(false);
   const [isPartiallyConnected, setIsPartiallyConnected] = useState(false);
@@ -80,11 +84,14 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
     return <EditorCanvasCardIconHelper type={data.type} />;
   }, [data]);
 
+  const handleDeleteNode = (nodeId: string | null) => {
+    if(!nodeId) return
+    deleteElements({nodes: [{id:nodeId}]});
+  }
+
   return (
     <>
-      {data.type !== "Trigger" &&
-        data.type !== "Watch Price" &&
-        data.type !== "AI" && (
+      {data.type !== "Trigger" && (
           <CustomHandle
             type="target"
             position={Position.Top}
@@ -116,6 +123,9 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
               <span>{data.description}</span>
             </CardDescription>
           </div>
+          <Button variant={"ghost"} onClick={()=>handleDeleteNode(nodeId)} className="group ml-auto">
+            <Trash2 className="h-4 w-4 text-slate-500 group-hover:text-red-600" />
+          </Button>
         </CardHeader>
         <Badge variant="secondary" className="absolute right-2 top-2">
           {data.type}
@@ -128,9 +138,9 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
           })}
         ></div>
       </Card>
-      {data.type !== "Buy" &&
-        data.type !== "Sell" &&
-        data.type !== "Restart" && (
+      {data.title !== "Buy" &&
+        data.title !== "Sell" &&
+        data.title !== "Restart" && (
           <CustomHandle type="source" position={Position.Bottom} id="a" />
         )}
     </>

@@ -1,6 +1,7 @@
 "use client";
 
-import { EditorActions, EditorNode, EditorNodeType } from "@/lib/types";
+import { initialEdges, initialNodes } from "@/lib/constants";
+import { EditorActions, EditorEdge, EditorNode, EditorNodeType } from "@/lib/types";
 import {
   Dispatch,
   ReactNode,
@@ -11,11 +12,7 @@ import {
 
 export type Editor = {
   elements: EditorNode[];
-  edges: {
-    id: string;
-    source: string;
-    target: string;
-  }[];
+  edges: EditorEdge[];
   selectedNode: EditorNodeType;
 };
 
@@ -30,8 +27,8 @@ export type EditorState = {
 };
 
 const initialEditorState: EditorState["editor"] = {
-  elements: [],
-  edges: [],
+  elements: initialNodes,
+  edges: initialEdges,
   selectedNode: {
     id: "",
     type: "Trigger",
@@ -100,15 +97,17 @@ const editorReducer = (
         edges: action.payload.edges,
       };
       const currentIndex = state.history.currentIndex;
-      const currentHistoryArray = state.history.historyArray.slice(0,currentIndex+1);
-      const recentEditorInHistory =
-        currentHistoryArray[currentIndex];
+      const currentHistoryArray = state.history.historyArray.slice(
+        0,
+        currentIndex + 1,
+      );
+      const recentEditorInHistory = currentHistoryArray[currentIndex];
       let newHistoryState = state.history;
       if (
         recentEditorInHistory.edges.length !== newEditorState.edges.length ||
         recentEditorInHistory.elements.length !== newEditorState.elements.length
       ) {
-        const newHistoryArray = [...state.history.historyArray, newEditorState];
+        const newHistoryArray = [...currentHistoryArray, newEditorState];
         newHistoryState = {
           ...state.history,
           historyArray: newHistoryArray,

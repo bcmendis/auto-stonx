@@ -25,12 +25,16 @@ export type EditorNodeType = {
     x: number;
     y: number;
   };
+
   data: EditorCanvasCardType;
+  measured?: { width: number; height: number };
+  selected?: boolean;
+  dragging?: boolean;
 };
 
 export type EditorNode = EditorNodeType;
 
-export type EditorEdge = { id: string; source: string; target: string };
+export type EditorEdge = { id: string; source: string; sourceHandle?: string; target: string };
 
 export type EditorActions =
   | {

@@ -27,7 +27,7 @@ import {
 } from "../ui/resizable";
 import { toast } from "sonner";
 import { v4 } from "uuid";
-import { EditorCanvasDefaultCardTypes } from "@/lib/constants";
+import { EditorCanvasDefaultCardTypes, initialEdges, initialNodes } from "@/lib/constants";
 import { Loader2 } from "lucide-react";
 import FlowInstance from "./FlowInstance";
 import EditorCanvasSideBar from "./EditorCanvasSideBar";
@@ -36,8 +36,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 type Props = {};
 
-const initialNodes: EditorNode[] = [];
-const initialEdges: EditorEdge[] = [];
+
 
 const EditorCanvas = (props: Props) => {
   const { state, dispatch } = useEditor();
@@ -76,7 +75,10 @@ const EditorCanvas = (props: Props) => {
   );
 
   const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
+    (params: Edge | Connection) => {
+        //@ts-ignore
+        setEdges((eds) => addEdge(params, eds))
+    },
     [],
   );
 
@@ -94,11 +96,14 @@ const EditorCanvas = (props: Props) => {
       }
 
       const triggerAlreadyExists = state.editor.elements.find(
-        (node) => node.type === "Trigger",
+        (node) => node.data.type === "Trigger",
       );
 
-      if (type === "Trigger" && triggerAlreadyExists) {
-        toast("Only one trigger can be added to automations at the moment");
+      if (
+        EditorCanvasDefaultCardTypes[type].type === "Trigger" &&
+        triggerAlreadyExists
+      ) {
+        toast("Only one trigger can be added to an automated workflow");
         return;
       }
 
@@ -121,7 +126,7 @@ const EditorCanvas = (props: Props) => {
           completed: false,
           current: false,
           metadata: {},
-          type: type,
+          type: EditorCanvasDefaultCardTypes[type].type,
         },
       };
       //@ts-ignore
@@ -151,9 +156,20 @@ const EditorCanvas = (props: Props) => {
   };
 
   const handleClickAdd = (
-    type: EditorCanvasCardType["type"],
-    position: { x: number; y: number },
+    type: EditorCanvasCardType["type"]
   ) => {
+
+    const elementsArrayLength = state.editor.elements.length;
+    const lastElement = state.editor.elements[elementsArrayLength-1];
+    
+    const position = {
+        x: 0,
+        y: 0 }
+
+    if(lastElement) {
+        position.y = lastElement.position.y + 180;
+    }
+
     const newNode = {
       id: v4(),
       type,
@@ -164,10 +180,21 @@ const EditorCanvas = (props: Props) => {
         completed: false,
         current: false,
         metadata: {},
-        type,
+        type: EditorCanvasDefaultCardTypes[type].type,
       },
     };
-    setNodes((nds) => nds.concat(newNode));
+
+    const triggerAlreadyExists = state.editor.elements.find(
+      (node) => node.data.type === "Trigger",
+    );
+
+    if (newNode.data.type === "Trigger" && triggerAlreadyExists) {
+        toast("Only one trigger can be added to an automated workflow");
+      return;
+    } else {
+      //@ts-ignore
+      setNodes((nds) => nds.concat(newNode));
+    }
   };
 
   useEffect(() => {
@@ -248,7 +275,7 @@ const EditorCanvas = (props: Props) => {
                 </div>
               </div>
             </ResizablePanel>
-            <ResizableHandle withHandle/>
+            <ResizableHandle withHandle />
             <ResizablePanel defaultSize={30} minSize={20}>
               {isWorkflowLoading ? (
                 <div className="absolute flex h-full w-full items-center justify-center">
@@ -323,7 +350,7 @@ const EditorCanvas = (props: Props) => {
                 </div>
               </div>
             </ResizablePanel>
-            <ResizableHandle withHandle/>
+            <ResizableHandle withHandle />
             <ResizablePanel defaultSize={40} minSize={20}>
               {isWorkflowLoading ? (
                 <div className="absolute flex h-full w-full items-center justify-center">
