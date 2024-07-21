@@ -75,7 +75,6 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
       }
     }
   }, [nodeId, state, currentNode]);
-  console.log("State: ", state);
 
   const logo = useMemo(() => {
     return <EditorCanvasCardIconHelper type={data.type} />;
@@ -114,10 +113,6 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
           <div>
             <CardTitle className="text-md">{data.title}</CardTitle>
             <CardDescription>
-              {/* <p className="text-xs text-muted-foreground/50">
-                <b className="text-muted-foreground/80">ID: </b>
-                {nodeId}
-              </p> */}
               <span>{data.description}</span>
             </CardDescription>
           </div>

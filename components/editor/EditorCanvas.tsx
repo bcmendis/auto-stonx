@@ -32,6 +32,7 @@ import { Loader2 } from "lucide-react";
 import FlowInstance from "./FlowInstance";
 import EditorCanvasSideBar from "./EditorCanvasSideBar";
 import InfoCard from "./InfoCard";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 type Props = {};
 
@@ -45,6 +46,13 @@ const EditorCanvas = (props: Props) => {
   const [isWorkflowLoading, setIsWorkflowLoading] = useState<boolean>(false);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance>();
+  const [isWindow, setIsWindow] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== undefined) setIsWindow(true);
+  }, []);
+
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const onDragOver = useCallback((event: any) => {
     event.preventDefault();
@@ -142,6 +150,26 @@ const EditorCanvas = (props: Props) => {
     });
   };
 
+  const handleClickAdd = (
+    type: EditorCanvasCardType["type"],
+    position: { x: number; y: number },
+  ) => {
+    const newNode = {
+      id: v4(),
+      type,
+      position,
+      data: {
+        title: type,
+        description: EditorCanvasDefaultCardTypes[type].description,
+        completed: false,
+        current: false,
+        metadata: {},
+        type,
+      },
+    };
+    setNodes((nds) => nds.concat(newNode));
+  };
+
   useEffect(() => {
     dispatch({ type: "LOAD_DATA", payload: { edges, elements: nodes } });
   }, [nodes, edges, dispatch]);
@@ -163,63 +191,158 @@ const EditorCanvas = (props: Props) => {
   );
 
   return (
-    <ResizablePanelGroup direction="horizontal">
-      <ResizablePanel defaultSize={70}>
-        <div className="flex h-full items-center justify-center">
-          <div style={{ width: "100%", height: "100%" }} className="relative">
-            {isWorkflowLoading ? (
-              <div className="absolute flex h-full w-full items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin stroke-orange-500" />
-              </div>
-            ) : (
-              <ReactFlow
-                className="w-full"
-                onDrop={onDrop}
-                onDragOver={onDragOver}
-                nodes={state.editor.elements}
-                onNodesChange={onNodesChange}
-                edges={state.editor.edges}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                onInit={setReactFlowInstance}
-                fitView
-                onClick={handleClickCanvas}
-                nodeTypes={nodeTypes}
-                proOptions={{ hideAttribution: true }}
-              >
-                <Controls position="top-left" className="text-black" />
-                <MiniMap
-                  position="bottom-left"
-                  className="!bg-background"
-                  zoomable
-                  pannable
-                />
-                <Background
-                  //@ts-ignore
-                  variant="dots"
-                  gap={12}
-                  size={1}
-                />
-                <Panel position="top-right"><InfoCard /></Panel>
-              </ReactFlow>
-            )}
-          </div>
+    <>
+      {!isWindow ? (
+        <div className="absolute flex h-full w-full items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin stroke-orange-500" />
         </div>
-      </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize={30} minSize={20}>
-        {isWorkflowLoading ? (
-          <div className="absolute flex h-full w-full items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin stroke-orange-500" />
-          </div>
-        ) : (
-          <div className="flex flex-col justify-between">
-            <EditorCanvasSideBar nodes={nodes} />
-            <FlowInstance edges={edges} nodes={nodes} />
-          </div>
-        )}
-      </ResizablePanel>
-    </ResizablePanelGroup>
+      ) : (
+        isDesktop && (
+          <ResizablePanelGroup direction={"horizontal"}>
+            <ResizablePanel defaultSize={70}>
+              <div className="flex h-full items-center justify-center">
+                <div
+                  style={{ width: "100%", height: "100%" }}
+                  className="relative"
+                >
+                  {isWorkflowLoading ? (
+                    <div className="absolute flex h-full w-full items-center justify-center">
+                      <Loader2 className="h-8 w-8 animate-spin stroke-orange-500" />
+                    </div>
+                  ) : (
+                    <ReactFlow
+                      className="w-full"
+                      onDrop={onDrop}
+                      onDragOver={onDragOver}
+                      nodes={state.editor.elements}
+                      onNodesChange={onNodesChange}
+                      edges={state.editor.edges}
+                      onEdgesChange={onEdgesChange}
+                      onConnect={onConnect}
+                      onInit={setReactFlowInstance}
+                      fitView
+                      onClick={handleClickCanvas}
+                      nodeTypes={nodeTypes}
+                      proOptions={{ hideAttribution: true }}
+                    >
+                      <Controls position="top-left" className="text-black" />
+                      {isDesktop && (
+                        <MiniMap
+                          position="bottom-left"
+                          className="!bg-background"
+                          zoomable
+                          pannable
+                        />
+                      )}
+                      <Background
+                        //@ts-ignore
+                        variant="dots"
+                        gap={12}
+                        size={1}
+                      />
+                      <Panel position="top-right">
+                        <InfoCard />
+                      </Panel>
+                    </ReactFlow>
+                  )}
+                </div>
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle/>
+            <ResizablePanel defaultSize={30} minSize={20}>
+              {isWorkflowLoading ? (
+                <div className="absolute flex h-full w-full items-center justify-center">
+                  <Loader2 className="h-8 w-8 animate-spin stroke-orange-500" />
+                </div>
+              ) : (
+                <div className="flex h-full flex-col overflow-scroll md:justify-between">
+                  <EditorCanvasSideBar
+                    nodes={nodes}
+                    onClickAdd={handleClickAdd}
+                  />
+                  <FlowInstance edges={edges} nodes={nodes} />
+                </div>
+              )}
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        )
+      )}
+      {!isWindow ? (
+        <div className="absolute flex h-full w-full items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin stroke-orange-500" />
+        </div>
+      ) : (
+        !isDesktop && (
+          <ResizablePanelGroup direction={"vertical"}>
+            <ResizablePanel defaultSize={60}>
+              <div className="flex h-full items-center justify-center">
+                <div
+                  style={{ width: "100%", height: "100%" }}
+                  className="relative"
+                >
+                  {isWorkflowLoading ? (
+                    <div className="absolute flex h-full w-full items-center justify-center">
+                      <Loader2 className="h-8 w-8 animate-spin stroke-orange-500" />
+                    </div>
+                  ) : (
+                    <ReactFlow
+                      className="w-full"
+                      onDrop={onDrop}
+                      onDragOver={onDragOver}
+                      nodes={state.editor.elements}
+                      onNodesChange={onNodesChange}
+                      edges={state.editor.edges}
+                      onEdgesChange={onEdgesChange}
+                      onConnect={onConnect}
+                      onInit={setReactFlowInstance}
+                      fitView
+                      onClick={handleClickCanvas}
+                      nodeTypes={nodeTypes}
+                      proOptions={{ hideAttribution: true }}
+                    >
+                      <Controls position="top-left" className="text-black" />
+                      {isDesktop && (
+                        <MiniMap
+                          position="bottom-left"
+                          className="!bg-background"
+                          zoomable
+                          pannable
+                        />
+                      )}
+                      <Background
+                        //@ts-ignore
+                        variant="dots"
+                        gap={12}
+                        size={1}
+                      />
+                      <Panel position="top-right">
+                        <InfoCard />
+                      </Panel>
+                    </ReactFlow>
+                  )}
+                </div>
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle/>
+            <ResizablePanel defaultSize={40} minSize={20}>
+              {isWorkflowLoading ? (
+                <div className="absolute flex h-full w-full items-center justify-center">
+                  <Loader2 className="h-8 w-8 animate-spin stroke-orange-500" />
+                </div>
+              ) : (
+                <div className="flex h-full flex-col overflow-scroll md:justify-between">
+                  <EditorCanvasSideBar
+                    nodes={nodes}
+                    onClickAdd={handleClickAdd}
+                  />
+                  <FlowInstance edges={edges} nodes={nodes} />
+                </div>
+              )}
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        )
+      )}
+    </>
   );
 };
 
