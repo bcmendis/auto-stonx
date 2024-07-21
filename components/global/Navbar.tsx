@@ -14,13 +14,13 @@ const Navbar = async (props: Props) => {
       <nav className="absolute left-[50%] top-[50%] hidden translate-x-[-50%] translate-y-[-50%] transform md:block">
         <ul className="flex list-none items-center gap-4">
           <li>
-            <Link href={"/"}>Products</Link>
+            <Link href={"/"} className="hover:text-orange-500">Products</Link>
           </li>
           <li>
-            <Link href={"/"}>Pricing</Link>
+            <Link href={"/"} className="hover:text-orange-500">Pricing</Link>
           </li>
           <li>
-            <Link href={"/"}>Clients</Link>
+            <Link href={"/"} className="hover:text-orange-500">Clients</Link>
           </li>
         </ul>
       </nav>

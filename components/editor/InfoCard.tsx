@@ -16,13 +16,13 @@ const InfoCard = (props: Props) => {
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1" className="border-none">
-        <AccordionTrigger className="w-[200px] rounded-xl border bg-black/5 p-4 backdrop-blur-sm dark:border-muted-foreground/70 data-[state=open]:rounded-b-none">
-          <div className="w-full h-full flex gap-4">
+        <AccordionTrigger className="w-[200px] rounded-xl border p-4 text-muted-foreground backdrop-blur-sm dark:border-muted-foreground/70 data-[state=open]:rounded-b-none data-[state=open]:text-orange-500 hover:no-underline">
+          <div className="w-full h-full flex gap-4 text-inherit">
             <Info />
             <div className="text-md items-center">Information</div>
           </div>
         </AccordionTrigger>
-        <AccordionContent className="flex flex-col items-center gap-4 p-4 border border-t-0 rounded-b-xl dark:border-muted-foreground/70 bg-black/5 backdrop-blur-sm">
+        <AccordionContent className="flex flex-col items-center gap-4 p-4 border border-t-0 rounded-b-xldark:border-muted-foreground/70 backdrop-blur-sm">
           <Badge variant="default" className="w-fit">
             Add Node/Edge
           </Badge>

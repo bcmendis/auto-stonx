@@ -53,8 +53,6 @@ const EditorCanvas = (props: Props) => {
     useState<ReactFlowInstance>();
   const [isWindow, setIsWindow] = useState(false);
 
-  console.log(state.editor);
-
   useEffect(() => {
     if (typeof window !== undefined) setIsWindow(true);
   }, []);
@@ -268,7 +266,7 @@ const EditorCanvas = (props: Props) => {
   );
 
   const sideContent = (
-    <div className="flex h-full flex-col overflow-scroll md:justify-between">
+    <div className="flex h-full flex-col overflow-scroll">
       <EditorCanvasSideBar nodes={nodes} onClickAdd={handleClickAdd} />
       <FlowInstance edges={edges} nodes={nodes} />
     </div>

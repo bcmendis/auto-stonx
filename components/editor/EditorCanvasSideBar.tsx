@@ -19,41 +19,56 @@ import { useEffect, useState } from "react";
 
 type Props = {
   nodes: EditorNode[];
-  onClickAdd: (
-    type: EditorCanvasCardType["type"],
-  ) => void;
+  onClickAdd: (type: EditorCanvasCardType["type"]) => void;
 };
 
 const EditorCanvasSideBar = ({ nodes, onClickAdd }: Props) => {
-    const {state} = useEditor();
-    const [value, setValue] = useState("triggers");
+  const { state } = useEditor();
+  const [value, setValue] = useState("triggers");
 
-    useEffect(()=>{
-        const isTriggerPresent = !!state.editor.elements.find(
-            (node) => node.data.type === "Trigger",
-          );
+  useEffect(() => {
+    const isTriggerPresent = !!state.editor.elements.find(
+      (node) => node.data.type === "Trigger",
+    );
 
-          if(isTriggerPresent) setValue("actions");
-          else setValue("triggers")
-
-    },[state])
+    if (isTriggerPresent) setValue("actions");
+    else setValue("triggers");
+  }, [state]);
 
   const handleCardAdd = (type: EditorCanvasTypes) => {
     onClickAdd(type);
   };
   return (
-    <aside>
-      <Tabs value={value} onValueChange={setValue} className="overflow-scroll md:h-[80vh]">
+    <aside className="flex flex-1">
+      <Tabs
+        value={value}
+        onValueChange={setValue}
+        className="overflow-scroll bg-slate-100 dark:bg-black md:h-[80vh]"
+      >
         <TabsList className="bg-transparent">
-          <TabsTrigger value="triggers">Triggers</TabsTrigger>
-          <TabsTrigger value="actions" disabled={!nodes.length}>Actions</TabsTrigger>
+          <TabsTrigger
+            value="triggers"
+            className="data-[state=active]:text-orange-500"
+          >
+            Triggers
+          </TabsTrigger>
+          <TabsTrigger
+            value="actions"
+            className="data-[state=active]:text-orange-500"
+            disabled={!nodes.length}
+          >
+            Actions
+          </TabsTrigger>
         </TabsList>
         <Separator />
-        <TabsContent value="triggers" className="flex flex-col gap-4 p-4 data-[state=inactive]:hidden">
-          {filterCards({handleCardAdd, type:"Trigger"})}
+        <TabsContent
+          value="triggers"
+          className="flex flex-col gap-4 p-4 data-[state=inactive]:hidden"
+        >
+          {filterCards({ handleCardAdd, type: "Trigger" })}
         </TabsContent>
         <TabsContent value="actions" className="flex flex-col gap-4 p-4">
-        {filterCards({handleCardAdd, type:"Action"})}
+          {filterCards({ handleCardAdd, type: "Action" })}
         </TabsContent>
       </Tabs>
     </aside>
@@ -63,37 +78,37 @@ const EditorCanvasSideBar = ({ nodes, onClickAdd }: Props) => {
 export default EditorCanvasSideBar;
 
 type FilterCardProps = {
-    type: string;
-    handleCardAdd: (type: EditorCanvasTypes) => void;
-}
+  type: string;
+  handleCardAdd: (type: EditorCanvasTypes) => void;
+};
 
-const filterCards = ({handleCardAdd, type} : FilterCardProps) => {
+const filterCards = ({ handleCardAdd, type }: FilterCardProps) => {
   return Object.entries(EditorCanvasDefaultCardTypes)
-    .filter(
-      ([_, cardType]) =>
-        (cardType.type === type)
-    )
+    .filter(([_, cardType]) => cardType.type === type)
     .map(([cardKey, cardValue]) => (
       <Card
         key={cardKey}
         draggable
-        className="w-full cursor-grab border-black bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900"
+        className="w-full cursor-grab border-black dark:border-neutral-700 dark:bg-neutral-900"
         onDragStart={(event) =>
           onDragStart(event, cardKey as EditorCanvasTypes)
         }
       >
         <CardHeader className="flex flex-row items-center justify-between gap-4 p-4">
-          <EditorCanvasCardIconHelper type={cardKey as EditorCanvasTypes} />
+          <EditorCanvasCardIconHelper
+            type={cardKey as EditorCanvasTypes}
+            className={"stroke-orange-500"}
+          />
           <CardTitle className="text-md flex w-full flex-1 flex-col items-center text-center sm:items-start sm:text-left">
             {cardKey}
             <CardDescription>{cardValue.description}</CardDescription>
           </CardTitle>
           <Button
             variant={"ghost"}
-            className="m-0 p-0"
+            className="group m-0 px-2 py-0"
             onClick={() => handleCardAdd(cardKey as EditorCanvasTypes)}
           >
-            <Plus className="min-h-6 min-w-6" />
+            <Plus className="min-h-6 min-w-6 group-hover:stroke-orange-500" />
           </Button>
         </CardHeader>
       </Card>

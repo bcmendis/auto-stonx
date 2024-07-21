@@ -111,8 +111,8 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
             });
         }}
         className={cn(
-          "relative max-w-[400px]",
-          isSelected ? "border-white" : "dark:border-muted-foreground/70",
+          "relative max-w-[400px] border-2",
+          isSelected ? "border-orange-500" : "border-black dark:border-muted-foreground/70",
         )}
       >
         <CardHeader className="flex flex-row items-center gap-4">
@@ -127,7 +127,7 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
             <Trash2 className="h-4 w-4 text-slate-500 group-hover:text-red-600" />
           </Button>
         </CardHeader>
-        <Badge variant="secondary" className="absolute right-2 top-2">
+        <Badge variant="secondary" className="absolute right-2 top-2 text-orange-500">
           {data.type}
         </Badge>
         <div

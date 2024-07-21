@@ -29,7 +29,7 @@ const FlowInstance = ({ nodes, edges }: Props) => {
     if(!isTriggerPresent) toast.warning("Workflow must contain a Trigger!");
     else if(!isTriggerConnected) toast.warning("Trigger must have a valid connection!");
     else toast.success("Your workflow has been published!");
-    
+
     //Call Server Action to push workflow (state) to database
   };
 
@@ -52,19 +52,19 @@ const FlowInstance = ({ nodes, edges }: Props) => {
     onAutomateFlow()
   }, [edges, onAutomateFlow])
 
-  const onUndo = () => {
-    dispatch({
-      type: "UNDO",
-    });
-  }
+  // const onUndo = () => {
+  //   dispatch({
+  //     type: "UNDO",
+  //   });
+  // }
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex gap-3 p-4">
-        <Button onClick={onSaveWorkflow} disabled={isFlow.length < 1}>
+        <Button onClick={onSaveWorkflow} disabled={isFlow.length < 1} className="hover:bg-orange-500 hover:text-black">
           Save
         </Button>
-        <Button onClick={onPublishWorkflow} disabled={isFlow.length < 1}>
+        <Button variant={"secondary"} onClick={onPublishWorkflow} disabled={isFlow.length < 1} className="hover:text-orange-500">
           Publish
         </Button>
       {/* <Button onClick={onUndo}>

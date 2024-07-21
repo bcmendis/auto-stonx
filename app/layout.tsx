@@ -27,13 +27,26 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col overflow-hidden h-screen">
-          <Navbar />
-          <div className="flex h-full">
-            <Sidebar />
-          {children}
-          <Toaster richColors/>
-          </div>
+          <div className="flex h-screen flex-col overflow-hidden">
+            <Navbar />
+            <div className="flex h-full">
+              <Sidebar />
+              {children}
+              <Toaster
+                position="bottom-center"
+                toastOptions={{
+                  descriptionClassName: "flex",
+                  unstyled: true,
+                  classNames: {
+                    toast: "flex p-4 w-[300px] items-center justify-center gap-2 bg-white dark:bg-black border rounded-lg text-sm",
+                    error: "bg-red-400 text-red-500 border-red-500",
+                    success: "bg-orange-100 text-orange-500 border-orange-500",
+                    warning: "bg-yellow-100 text-yellow-500 border-yellow-500",
+                    info: "bg-blue-100 text-blue-500 border-blue-500",
+                  },
+                }}
+              />
+            </div>
           </div>
         </ThemeProvider>
       </body>

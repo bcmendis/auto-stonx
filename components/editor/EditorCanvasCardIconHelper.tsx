@@ -1,5 +1,5 @@
-'use client'
-import React from 'react'
+"use client";
+import React from "react";
 import {
   CircuitBoard,
   MousePointerClickIcon,
@@ -10,84 +10,35 @@ import {
   Wallet,
   Handshake,
   Split,
-} from 'lucide-react'
-import { EditorCanvasTypes } from '@/lib/types'
+} from "lucide-react";
+import { EditorCanvasTypes } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
-type Props = { type: string }
+type Props = { type: string; className?: string };
 
-const EditorCanvasCardIconHelper = ({ type }: Props) => {
+const EditorCanvasCardIconHelper = ({ type, className }: Props) => {
   switch (type) {
-    case 'Watch Price':
-      return (
-        <Eye
-          className="flex-shrink-0"
-          size={30}
-        />
-      )
-    case 'Condition':
-      return (
-        <Split
-          className="flex-shrink-0 rotate-180"
-          size={30}
-        />
-      )
-    case 'AI':
-      return (
-        <CircuitBoard
-          className="flex-shrink-0"
-          size={30}
-        />
-      )
-    case 'Restart':
-      return (
-        <RotateCcw
-          className="flex-shrink-0"
-          size={30}
-        />
-      )
-    case 'Trigger':
-      return (
-        <MousePointerClickIcon
-          className="flex-shrink-0"
-          size={30}
-        />
-      )
-    case 'Action':
-      return (
-        <Zap
-          className="flex-shrink-0"
-          size={30}
-        />
-      )
-    case 'Wait':
-      return (
-        <Timer
-          className="flex-shrink-0"
-          size={30}
-        />
-      )
-      case 'Buy':
-      return (
-        <Wallet
-          className="flex-shrink-0"
-          size={30}
-        />
-      )
-      case 'Sell':
-      return (
-        <Handshake
-          className="flex-shrink-0"
-          size={30}
-        />
-      )
+    case "Watch Price":
+      return <Eye className={cn("flex-shrink-0", className)} size={30} />;
+    case "Condition":
+      return <Split className={cn("flex-shrink-0 rotate-180", className)} size={30} />;
+    case "AI":
+      return <CircuitBoard className={cn("flex-shrink-0", className)} size={30} />;
+    case "Restart":
+      return <RotateCcw className={cn("flex-shrink-0", className)} size={30} />;
+    case "Trigger":
+      return <MousePointerClickIcon className={cn("flex-shrink-0", className)} size={30} />;
+    case "Action":
+      return <Zap className={cn("flex-shrink-0", className)} size={30} />;
+    case "Wait":
+      return <Timer className={cn("flex-shrink-0", className)} size={30} />;
+    case "Buy":
+      return <Wallet className={cn("flex-shrink-0", className)} size={30} />;
+    case "Sell":
+      return <Handshake className={cn("flex-shrink-0", className)} size={30} />;
     default:
-      return (
-        <Zap
-          className="flex-shrink-0"
-          size={30}
-        />
-      )
+      return <Zap className={cn("flex-shrink-0", className)} size={30} />;
   }
-}
+};
 
-export default EditorCanvasCardIconHelper
+export default EditorCanvasCardIconHelper;
