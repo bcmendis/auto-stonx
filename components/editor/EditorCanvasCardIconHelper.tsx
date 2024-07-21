@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import { EditorCanvasTypes } from '@/lib/types'
 
-type Props = { type: EditorCanvasTypes }
+type Props = { type: string }
 
 const EditorCanvasCardIconHelper = ({ type }: Props) => {
   switch (type) {

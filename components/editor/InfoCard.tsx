@@ -15,7 +15,7 @@ type Props = {};
 const InfoCard = (props: Props) => {
   return (
     <Accordion type="single" collapsible>
-      <AccordionItem value="item-1">
+      <AccordionItem value="item-1" className="border-none">
         <AccordionTrigger className="w-[200px] rounded-xl border bg-black/5 p-4 backdrop-blur-sm dark:border-muted-foreground/70 data-[state=open]:rounded-b-none">
           <div className="w-full h-full flex gap-4">
             <Info />

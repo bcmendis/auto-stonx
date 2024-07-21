@@ -19,13 +19,18 @@ const FlowInstance = ({ nodes, edges }: Props) => {
   const onSaveWorkflow = () => {
     //Call Server Action to save workflow (nodes & edges) to database
 
-    toast.message("Your workflow has been saved!");
+    toast.success("Your workflow has been saved!");
   };
 
   const onPublishWorkflow = () => {
+    const triggerNode = state.editor.elements.find((node) => node.data.type === "Trigger");
+    const isTriggerPresent = !!triggerNode
+    const isTriggerConnected = !!state.editor.edges.find((node) => node.source === triggerNode?.id);
+    if(!isTriggerPresent) toast.warning("Workflow must contain a Trigger!");
+    else if(!isTriggerConnected) toast.warning("Trigger must have a valid connection!");
+    else toast.success("Your workflow has been published!");
+    
     //Call Server Action to push workflow (state) to database
-
-    toast.message("Your workflow has been published!");
   };
 
 

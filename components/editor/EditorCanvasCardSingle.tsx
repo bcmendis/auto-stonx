@@ -81,7 +81,7 @@ const EditorCanvasCardSingle = ({ data }: { data: EditorCanvasCardType }) => {
   }, [nodeId, state, currentNode]);
 
   const logo = useMemo(() => {
-    return <EditorCanvasCardIconHelper type={data.type} />;
+    return <EditorCanvasCardIconHelper type={data.title} />;
   }, [data]);
 
   const handleDeleteNode = (nodeId: string | null) => {

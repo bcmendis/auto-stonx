@@ -32,7 +32,7 @@ export default function RootLayout({
           <div className="flex h-full">
             <Sidebar />
           {children}
-          <Toaster />
+          <Toaster richColors/>
           </div>
           </div>
         </ThemeProvider>
